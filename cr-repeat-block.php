@@ -5,7 +5,7 @@
  Description: Плагин предназначен для добавления повторяющихся блоков контента в разные записи.
  Version: 1.0.0
  Author: Мaksim (WP_Panda) Popov
- Author URI: https://github.com/WP-Panda
+ Author URI: http://wp-panda.com/pay
  */
 
  if( !defined( 'ABSPATH' ) ) exit;
