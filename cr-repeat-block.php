@@ -60,6 +60,21 @@ function cr_rep_block_init(){
     load_plugin_textdomain( 'cr-repeat-block', false, dirname( plugin_basename( __FILE__ ) ). '/languages/'  );
 }
 
+/**
+ * Подключение скриптов
+ */
+add_action('admin_enqueue_scripts', 'cr_rep_block_register_scripts');
+function cr_rep_block_register_scripts($hook) {
+
+    wp_register_script('custom_jquery', plugins_url('/assets/js/cr-repeat-block.js', __FILE__), array('jquery'), '2.5.1');
+    wp_register_style('new_style', plugins_url('/assets/css/style.css', __FILE__), false, '1.0.0', 'all');
+
+    if( 'edit.php' === $hook && isset($_GET['post_type']) && 'cr-contents-blocks' ===  $_GET['post_type']  ) {
+       wp_enqueue_script('custom_jquery');
+       wp_enqueue_style('new_style');
+    }
+}
+
 /*
  *Add post type cr-contents-blocks
  */
@@ -109,7 +124,7 @@ if ( ! function_exists( 'cr_rep_block_columns_display') ) {
     {
         $out = '';
         if ($column === 'post_page_id') {
-            $out .= "<span class='copy-code'>[cr_block id='{$id}']</span><i class='dashicons dashicons-admin-page'></i>";
+            $out .= "<span class='copy-code'>[cr_block id='{$id}']</span><i class='copy-icon dashicons dashicons-admin-page'></i>";
         }
 
         if ($column === 'text') {
@@ -129,7 +144,7 @@ if ( ! function_exists( 'cr_rep_block_columns_display') ) {
  *Add shortcode
  */
 if ( ! function_exists( 'cr_rep_block_short') ) {
-    function cr_rep_block__short( $atts, $content = null ) {
+    function cr_rep_block_short( $atts, $content = null ) {
         extract( shortcode_atts( array(
             "id" => ''
         ), $atts ) );

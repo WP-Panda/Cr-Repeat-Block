@@ -1,0 +1,13 @@
+.copy-icon {
+    color: #C7C7C7;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.copy-icon:hover{
+    color: #0073aa;
+}
+
+.copy-icon:active{
+     color: #199635;
+}
