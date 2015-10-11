@@ -11,3 +11,10 @@
 .copy-icon:active{
      color: #199635;
 }
+
+.cr-repeat-copy-text {
+    background-color: #fff;
+    border: 1px solid #c9c9c9;
+    padding: 10px;
+    position: absolute;
+}
