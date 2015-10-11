@@ -1,4 +1,4 @@
-<?php 
+<?php
 /*
  Plugin Name: CR Repeat Block
  Plugin URI: https://github.com/WP-Panda/Cr-Repeat-Block
@@ -27,7 +27,7 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
- if( !defined( 'ABSPATH' ) ) exit;
+if( !defined( 'ABSPATH' ) ) exit;
 
 
 register_activation_hook( __FILE__, 'myplugin_activate' );
@@ -64,75 +64,78 @@ function cr_rep_block_init(){
  *Add post type cr-contents-blocks
  */
 if ( ! function_exists( 'cr_rep_block_create_cr_contents_blocks') ) {
-	function cr_rep_block_create_cr_contents_blocks() {
-		register_post_type( 'cr-contents-blocks',
-			array(
-				'labels' => array(
-					'name' => __( 'Duplicate Blocks','cr-repeat-block' ),
-					'singular_name' => __( 'Duplicate Blocks','cr-repeat-block' )
-				),
-			'public' => true,
-			'has_archive' => false,
-			)
-		);
-	}
+    function cr_rep_block_create_cr_contents_blocks() {
+        register_post_type( 'cr-contents-blocks',
+            array(
+                'labels' => array(
+                    'name' => __( 'Duplicate Blocks','cr-repeat-block' ),
+                    'singular_name' => __( 'Duplicate Blocks','cr-repeat-block' )
+                ),
+                'public' => true,
+                'has_archive' => false,
+                'menu_icon' => 'dashicons-editor-justify'
+            )
+        );
+    }
 
-	add_action( 'init', 'cr_rep_block_create_cr_contents_blocks' );
+    add_action( 'init', 'cr_rep_block_create_cr_contents_blocks' );
 }
 
 /*
  *Add custom columns 
  */
 if ( ! function_exists( 'cr_rep_block_cr_columns_register') ) {
-	function cr_rep_block_cr_columns_register( $columns ) {
-		$out = array();
+    function cr_rep_block_cr_columns_register( $columns ) {
+        $out = array();
         $i=0;
-		foreach($columns as $col=>$name){
-			$out[$col] = $name;
+        foreach($columns as $col=>$name){
+            $out[$col] = $name;
             if(++$i==3)
-            $out['post_page_id'] = __( 'Block Shortcode','cr-repeat-block' );
+                $out['post_page_id'] = __( 'Block Shortcode','cr-repeat-block' );
             if(++$i==4)
-            $out['text'] = __( 'Content','cr-repeat-block' );
-		}
-	 	return $out;
-	}
+                $out['text'] = __( 'Content','cr-repeat-block' );
+        }
+        return $out;
+    }
 
-	add_filter('manage_cr-contents-blocks_posts_columns', 'cr_rep_block_cr_columns_register', 5);
+    add_filter('manage_cr-contents-blocks_posts_columns', 'cr_rep_block_cr_columns_register', 5);
 }
 
 /*
  *Add content in custom columns
  */
 if ( ! function_exists( 'cr_rep_block_columns_display') ) {
-	function cr_rep_block_columns_display( $column, $id ) {
-		$out = '';
-		if($column === 'post_page_id') 
-		  $out .= "[cr_block id='{$id}']";
+    function cr_rep_block_columns_display( $column, $id )
+    {
+        $out = '';
+        if ($column === 'post_page_id') {
+            $out .= "<span class='copy-code'>[cr_block id='{$id}']</span><i class='dashicons dashicons-admin-page'></i>";
+        }
 
-		if($column === 'text') { 
-			$text = get_the_excerpt();
-				if ( !$text )
-					$text = '<em>' . __( 'Content Missing','cr-repeat-block' ) . '</em>';
-		 	}
-		$out .=$text;
+        if ($column === 'text') {
+            $text = get_the_excerpt();
+            if (!$text)
+                $text .= '<em style="color:#d54e21"><i class="dashicons dashicons-warning"></i>  ' . __('Content Missing', 'cr-repeat-block') . '</em>';
+            $out .= $text;
+        }
 
-		echo $out;
-	}
+        echo $out;
+    }
 
-	add_action( 'manage_cr-contents-blocks_posts_custom_column', 'cr_rep_block_columns_display', 10, 2 );
+    add_action( 'manage_cr-contents-blocks_posts_custom_column', 'cr_rep_block_columns_display', 10, 2 );
 }
 
 /*
  *Add shortcode
  */
 if ( ! function_exists( 'cr_rep_block_short') ) {
-	function cr_rep_block__short( $atts, $content = null ) {
-		extract( shortcode_atts( array(
-			"id" => ''
-		), $atts ) );
-		$post_get = get_post( $atts['id'] );
-		return '<span class="short">' . $post_get->post_content . '</span>';
-	}
+    function cr_rep_block__short( $atts, $content = null ) {
+        extract( shortcode_atts( array(
+            "id" => ''
+        ), $atts ) );
+        $post_get = get_post( $atts['id'] );
+        return '<span class="short">' . $post_get->post_content . '</span>';
+    }
 
-	add_shortcode("cr_block", "cr_rep_block_short");
+    add_shortcode("cr_block", "cr_rep_block_short");
 }
